@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sarthak.fittrackbackend.dto.AuthResponse;
 import com.sarthak.fittrackbackend.dto.LoginRequest;
 import com.sarthak.fittrackbackend.dto.RegisterRequest;
 import com.sarthak.fittrackbackend.entity.User;
@@ -27,7 +28,7 @@ public class AuthController {
         return authService.register(request);
     }
     @PostMapping("/login")
-    public String login(
+    public AuthResponse login(
             @RequestBody LoginRequest request) {
 
         return authService.login(request);

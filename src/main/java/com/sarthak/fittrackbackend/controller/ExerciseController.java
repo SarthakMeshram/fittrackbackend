@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sarthak.fittrackbackend.dto.CreateExerciseRequest;
+import com.sarthak.fittrackbackend.dto.UpdateExerciseRequest;
 import com.sarthak.fittrackbackend.entity.Exercise;
 import com.sarthak.fittrackbackend.service.ExerciseService;
 
@@ -36,13 +38,21 @@ public class ExerciseController {
                 .createExercise(request);
     }
 
-    @GetMapping("/{workoutId}")
+    // @GetMapping("/{workoutId}")
+    // public List<Exercise> getExercises(
+    //         @PathVariable Long workoutId) {
+
+    //     return exerciseService
+    //             .getExercises(workoutId);
+    // }
+
+    @GetMapping("/{workoutId}/exercises")
     public List<Exercise> getExercises(
             @PathVariable Long workoutId) {
 
-        return exerciseService
-                .getExercises(workoutId);
+        return exerciseService.getExercises(workoutId);
     }
+
     @PatchMapping("/{id}/complete")
     public Exercise completeExercise(@PathVariable Long id) {
 
@@ -54,5 +64,12 @@ public class ExerciseController {
         exerciseService.deleteExercise(id);
 
         return "Exercise deleted successfully"; 
+    }
+    @PutMapping("/{id}")
+    public Exercise updateExercise(
+            @PathVariable Long id,
+            @RequestBody UpdateExerciseRequest request) {
+
+        return exerciseService.updateExercise(id, request);
     }
 }

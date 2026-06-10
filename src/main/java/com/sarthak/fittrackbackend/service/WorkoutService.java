@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.sarthak.fittrackbackend.dto.CreateWorkoutRequest;
+import com.sarthak.fittrackbackend.dto.UpdateWorkoutRequest;
 import com.sarthak.fittrackbackend.entity.User;
 import com.sarthak.fittrackbackend.entity.Workout;
 import com.sarthak.fittrackbackend.repository.UserRepository;
@@ -56,4 +57,29 @@ public class WorkoutService {
         return workoutRepository.findByUserId(
                 userId);
     }
+
+    public Workout updateWorkout(
+        Long workoutId,
+        UpdateWorkoutRequest request) {
+
+    Workout workout = workoutRepository
+            .findById(workoutId)
+            .orElseThrow(() ->
+                    new RuntimeException("Workout not found"));
+
+    workout.setWorkoutName(
+            request.getWorkoutName());
+
+    return workoutRepository.save(workout);
+}
+
+public void deleteWorkout(Long workoutId) {
+
+    Workout workout = workoutRepository
+            .findById(workoutId)
+            .orElseThrow(() ->
+                    new RuntimeException("Workout not found"));
+
+    workoutRepository.delete(workout);
+}
 }

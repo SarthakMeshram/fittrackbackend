@@ -13,15 +13,20 @@ import com.sarthak.fittrackbackend.repository.UserRepository;
 
 @Service
 public class AuthService {
+        private final JwtService jwtService;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+public AuthService(
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        JwtService jwtService) {
+
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.jwtService = jwtService;
+}
 
     public User register(RegisterRequest request) {
 
@@ -84,6 +89,10 @@ public AuthResponse login(LoginRequest request) {
         );
     }
 
-    return new AuthResponse("Login successful");
+    String token =
+        jwtService.generateToken(
+                user.getEmail());
+
+return new AuthResponse(token);
 }
 }

@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.sarthak.fittrackbackend.dto.CreateWorkoutRequest;
 import com.sarthak.fittrackbackend.dto.UpdateWorkoutRequest;
@@ -28,58 +30,89 @@ public class WorkoutService {
     }
 
     public Workout createWorkout(
-            CreateWorkoutRequest request) {
+            CreateWorkoutRequest request,
+            String email) {
 
-        User user =
-                userRepository.findById(
-                        request.getUserId())
-                        .orElseThrow();
+        User user = getUserByEmail(email);
 
         Workout workout = new Workout();
 
-        workout.setWorkoutName(
-                request.getWorkoutName());
-
-        workout.setWorkoutDate(
-                LocalDate.now());
-
-        workout.setCreatedAt(
-                LocalDateTime.now());
-
+        workout.setWorkoutName(request.getWorkoutName());
+        workout.setWorkoutDate(LocalDate.now());
+        workout.setCreatedAt(LocalDateTime.now());
         workout.setUser(user);
 
         return workoutRepository.save(workout);
     }
 
-    public List<Workout> getUserWorkouts(
-            Long userId) {
+//     public List<Workout> getUserWorkouts(Long userId) {
+//         return workoutRepository.findByUserId(userId);
+//     }
 
-        return workoutRepository.findByUserId(
-                userId);
+    public List<Workout> getMyWorkouts(String email) {
+
+        User user = getUserByEmail(email);
+
+        return workoutRepository.findByUserId(user.getId());
     }
 
     public Workout updateWorkout(
-        Long workoutId,
-        UpdateWorkoutRequest request) {
+            Long workoutId,
+            UpdateWorkoutRequest request,
+            String email) {
 
-    Workout workout = workoutRepository
-            .findById(workoutId)
-            .orElseThrow(() ->
-                    new RuntimeException("Workout not found"));
+        Workout workout = workoutRepository
+                .findById(workoutId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Workout not found"));
 
-    workout.setWorkoutName(
-            request.getWorkoutName());
+        User user = getUserByEmail(email);
 
-    return workoutRepository.save(workout);
-}
+        validateOwnership(workout, user);
 
-public void deleteWorkout(Long workoutId) {
+        workout.setWorkoutName(request.getWorkoutName());
 
-    Workout workout = workoutRepository
-            .findById(workoutId)
-            .orElseThrow(() ->
-                    new RuntimeException("Workout not found"));
+        return workoutRepository.save(workout);
+    }
 
-    workoutRepository.delete(workout);
-}
+    public void deleteWorkout(
+            Long workoutId,
+            String email) {
+
+        Workout workout = workoutRepository
+                .findById(workoutId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Workout not found"));
+
+        User user = getUserByEmail(email);
+
+        validateOwnership(workout, user);
+
+        workoutRepository.delete(workout);
+    }
+
+    private User getUserByEmail(String email) {
+
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "User not found"));
+    }
+
+    private void validateOwnership(
+            Workout workout,
+            User user) {
+
+        if (!workout.getUser()
+                .getId()
+                .equals(user.getId())) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Access denied");
+        }
+    }
 }

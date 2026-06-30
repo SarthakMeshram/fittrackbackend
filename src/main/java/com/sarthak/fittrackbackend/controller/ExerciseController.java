@@ -1,5 +1,6 @@
 package com.sarthak.fittrackbackend.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,45 +32,55 @@ public class ExerciseController {
 
     @PostMapping
     public Exercise createExercise(
-            @RequestBody
-            CreateExerciseRequest request) {
+            @RequestBody CreateExerciseRequest request,
+            Principal principal) {
 
-        return exerciseService
-                .createExercise(request);
+        return exerciseService.createExercise(
+                request,
+                principal.getName());
     }
-
-    // @GetMapping("/{workoutId}")
-    // public List<Exercise> getExercises(
-    //         @PathVariable Long workoutId) {
-
-    //     return exerciseService
-    //             .getExercises(workoutId);
-    // }
 
     @GetMapping("/{workoutId}/exercises")
     public List<Exercise> getExercises(
-            @PathVariable Long workoutId) {
+            @PathVariable Long workoutId,
+            Principal principal) {
 
-        return exerciseService.getExercises(workoutId);
+        return exerciseService.getExercises(
+                workoutId,
+                principal.getName());
     }
 
     @PatchMapping("/{id}/complete")
-    public Exercise completeExercise(@PathVariable Long id) {
+    public Exercise completeExercise(
+            @PathVariable Long id,
+            Principal principal) {
 
-        return exerciseService.completeExercise(id);
+        return exerciseService.completeExercise(
+                id,
+                principal.getName());
     }
+
     @DeleteMapping("/{id}")
-    public String deleteExercise(@PathVariable Long id) {
+    public String deleteExercise(
+            @PathVariable Long id,
+            Principal principal) {
 
-        exerciseService.deleteExercise(id);
+        exerciseService.deleteExercise(
+                id,
+                principal.getName());
 
-        return "Exercise deleted successfully"; 
+        return "Exercise deleted successfully";
     }
+
     @PutMapping("/{id}")
     public Exercise updateExercise(
             @PathVariable Long id,
-            @RequestBody UpdateExerciseRequest request) {
+            @RequestBody UpdateExerciseRequest request,
+            Principal principal) {
 
-        return exerciseService.updateExercise(id, request);
+        return exerciseService.updateExercise(
+                id,
+                request,
+                principal.getName());
     }
 }

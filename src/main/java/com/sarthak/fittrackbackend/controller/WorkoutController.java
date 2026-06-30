@@ -1,5 +1,6 @@
 package com.sarthak.fittrackbackend.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,33 +35,50 @@ public class WorkoutController {
 
     @PostMapping
     public Workout createWorkout(
-            @RequestBody CreateWorkoutRequest request) {
+            @RequestBody CreateWorkoutRequest request,
+            Principal principal) {
 
-        return workoutService.createWorkout(request);
+        return workoutService.createWorkout(
+                request,
+                principal.getName());
     }
 
-    @GetMapping("/user/{userId}")
-    public List<Workout> getWorkouts(
-            @PathVariable Long userId) {
+    // @GetMapping("/user/{userId}")
+    // public List<Workout> getWorkouts(
+    //         @PathVariable Long userId) {
 
-        return workoutService.getUserWorkouts(userId);
-    }
+    //     return workoutService.getUserWorkouts(userId);
+    // }
 
     @PutMapping("/{workoutId}")
     public Workout updateWorkout(
             @PathVariable Long workoutId,
-            @RequestBody UpdateWorkoutRequest request) {
+            @RequestBody UpdateWorkoutRequest request,
+            Principal principal) {
 
         return workoutService.updateWorkout(
                 workoutId,
-                request);
+                request,
+                principal.getName());
     }
+
     @DeleteMapping("/{workoutId}")
-public String deleteWorkout(
-        @PathVariable Long workoutId) {
+    public String deleteWorkout(
+            @PathVariable Long workoutId,
+            Principal principal) {
 
-    workoutService.deleteWorkout(workoutId);
+        workoutService.deleteWorkout(
+                workoutId,
+                principal.getName());
 
-    return "Workout deleted successfully";
-}
+        return "Workout deleted successfully";
+    }
+
+    @GetMapping("/my-workouts")
+    public List<Workout> getMyWorkouts(
+            Principal principal) {
+
+        return workoutService.getMyWorkouts(
+                principal.getName());
+    }
 }

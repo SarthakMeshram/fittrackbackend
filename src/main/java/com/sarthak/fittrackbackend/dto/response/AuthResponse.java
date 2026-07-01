@@ -1,4 +1,4 @@
-package com.sarthak.fittrackbackend.dto;
+package com.sarthak.fittrackbackend.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

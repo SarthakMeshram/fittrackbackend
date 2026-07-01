@@ -4,14 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import com.sarthak.fittrackbackend.dto.CreateWorkoutRequest;
-import com.sarthak.fittrackbackend.dto.UpdateWorkoutRequest;
+import com.sarthak.fittrackbackend.dto.request.CreateWorkoutRequest;
+import com.sarthak.fittrackbackend.dto.request.UpdateWorkoutRequest;
 import com.sarthak.fittrackbackend.entity.User;
 import com.sarthak.fittrackbackend.entity.Workout;
+import com.sarthak.fittrackbackend.exception.ForbiddenException;
+import com.sarthak.fittrackbackend.exception.ResourceNotFoundException;
 import com.sarthak.fittrackbackend.repository.UserRepository;
 import com.sarthak.fittrackbackend.repository.WorkoutRepository;
 
@@ -63,9 +63,8 @@ public class WorkoutService {
 
         Workout workout = workoutRepository
                 .findById(workoutId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Workout not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("Workout not found"));
 
         User user = getUserByEmail(email);
 
@@ -82,9 +81,8 @@ public class WorkoutService {
 
         Workout workout = workoutRepository
                 .findById(workoutId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Workout not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("Workout not found"));
 
         User user = getUserByEmail(email);
 
@@ -97,9 +95,8 @@ public class WorkoutService {
 
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "User not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("User not found"));
     }
 
     private void validateOwnership(
@@ -110,9 +107,7 @@ public class WorkoutService {
                 .getId()
                 .equals(user.getId())) {
 
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "Access denied");
+            throw new ForbiddenException("Access denied");
         }
     }
 }

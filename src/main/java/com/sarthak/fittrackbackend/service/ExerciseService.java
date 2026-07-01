@@ -2,15 +2,15 @@ package com.sarthak.fittrackbackend.service;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import com.sarthak.fittrackbackend.dto.CreateExerciseRequest;
-import com.sarthak.fittrackbackend.dto.UpdateExerciseRequest;
+import com.sarthak.fittrackbackend.dto.request.CreateExerciseRequest;
+import com.sarthak.fittrackbackend.dto.request.UpdateExerciseRequest;
 import com.sarthak.fittrackbackend.entity.Exercise;
 import com.sarthak.fittrackbackend.entity.User;
 import com.sarthak.fittrackbackend.entity.Workout;
+import com.sarthak.fittrackbackend.exception.ForbiddenException;
+import com.sarthak.fittrackbackend.exception.ResourceNotFoundException;
 import com.sarthak.fittrackbackend.repository.ExerciseRepository;
 import com.sarthak.fittrackbackend.repository.UserRepository;
 import com.sarthak.fittrackbackend.repository.WorkoutRepository;
@@ -38,9 +38,8 @@ public class ExerciseService {
 
         Workout workout = workoutRepository
                 .findById(request.getWorkoutId())
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Workout not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("Workout not found"));
 
         User user = getUserByEmail(email);
 
@@ -65,9 +64,8 @@ public class ExerciseService {
 
         Workout workout = workoutRepository
                 .findById(workoutId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Workout not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("Workout not found"));
 
         User user = getUserByEmail(email);
 
@@ -82,9 +80,8 @@ public class ExerciseService {
 
         Exercise exercise = exerciseRepository
                 .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Exercise not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("Exercise not found"));
 
         User user = getUserByEmail(email);
 
@@ -101,9 +98,8 @@ public class ExerciseService {
 
         Exercise exercise = exerciseRepository
                 .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Exercise not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("Exercise not found"));
 
         User user = getUserByEmail(email);
 
@@ -119,9 +115,8 @@ public class ExerciseService {
 
         Exercise exercise = exerciseRepository
                 .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Exercise not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("Exercise not found"));
 
         User user = getUserByEmail(email);
 
@@ -140,9 +135,8 @@ public class ExerciseService {
 
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "User not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("User not found"));
     }
 
     private void validateOwnership(
@@ -154,9 +148,7 @@ public class ExerciseService {
                 .getId()
                 .equals(user.getId())) {
 
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "Access denied");
+            throw new ForbiddenException("Access denied");
         }
     }
 
@@ -168,9 +160,7 @@ public class ExerciseService {
                 .getId()
                 .equals(user.getId())) {
 
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "Access denied");
+            throw new ForbiddenException("Access denied");
         }
     }
 }

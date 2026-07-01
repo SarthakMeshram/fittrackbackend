@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sarthak.fittrackbackend.dto.CreateWorkoutRequest;
-import com.sarthak.fittrackbackend.dto.UpdateWorkoutRequest;
+import com.sarthak.fittrackbackend.dto.request.CreateWorkoutRequest;
+import com.sarthak.fittrackbackend.dto.request.UpdateWorkoutRequest;
 import com.sarthak.fittrackbackend.entity.Workout;
 import com.sarthak.fittrackbackend.service.ExerciseService;
 import com.sarthak.fittrackbackend.service.WorkoutService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/workouts")
@@ -35,7 +37,7 @@ public class WorkoutController {
 
     @PostMapping
     public Workout createWorkout(
-            @RequestBody CreateWorkoutRequest request,
+            @Valid @RequestBody CreateWorkoutRequest request,
             Principal principal) {
 
         return workoutService.createWorkout(
@@ -53,7 +55,7 @@ public class WorkoutController {
     @PutMapping("/{workoutId}")
     public Workout updateWorkout(
             @PathVariable Long workoutId,
-            @RequestBody UpdateWorkoutRequest request,
+            @Valid @RequestBody UpdateWorkoutRequest request,
             Principal principal) {
 
         return workoutService.updateWorkout(

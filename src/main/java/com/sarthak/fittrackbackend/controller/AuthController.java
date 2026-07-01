@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sarthak.fittrackbackend.dto.AuthResponse;
-import com.sarthak.fittrackbackend.dto.LoginRequest;
-import com.sarthak.fittrackbackend.dto.RegisterRequest;
+import com.sarthak.fittrackbackend.dto.request.LoginRequest;
+import com.sarthak.fittrackbackend.dto.request.RegisterRequest;
+import com.sarthak.fittrackbackend.dto.response.AuthResponse;
 import com.sarthak.fittrackbackend.entity.User;
 import com.sarthak.fittrackbackend.service.AuthService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,14 +27,14 @@ public class AuthController {
 
     @PostMapping("/register")
     public User register(
-            @RequestBody RegisterRequest request) {
+            @Valid @RequestBody RegisterRequest request) {
 
         return authService.register(request);
     }
 
     @PostMapping("/login")
     public AuthResponse login(
-            @RequestBody LoginRequest request) {
+            @Valid @RequestBody LoginRequest request) {
 
         return authService.login(request);
     }

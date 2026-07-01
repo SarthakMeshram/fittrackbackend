@@ -3,9 +3,9 @@ package com.sarthak.fittrackbackend.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.sarthak.fittrackbackend.dto.AuthResponse;
-import com.sarthak.fittrackbackend.dto.LoginRequest;
-import com.sarthak.fittrackbackend.dto.RegisterRequest;
+import com.sarthak.fittrackbackend.dto.request.LoginRequest;
+import com.sarthak.fittrackbackend.dto.request.RegisterRequest;
+import com.sarthak.fittrackbackend.dto.response.AuthResponse;
 import com.sarthak.fittrackbackend.entity.User;
 import com.sarthak.fittrackbackend.exception.EmailAlreadyExistsException;
 import com.sarthak.fittrackbackend.exception.InvalidCredentialsException;
